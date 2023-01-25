@@ -32,5 +32,5 @@ Application for crawling a specific website with excel script generation functio
 
 ## API Documentation
 ```
-http://127.0.0.1:8000/api/v1/doc/
+http://127.0.0.1:8000
 ```

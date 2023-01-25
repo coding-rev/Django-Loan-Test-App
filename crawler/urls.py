@@ -1,11 +1,10 @@
-from django.urls import path
+from django.urls import path, include
 from .views import *
-from rest_framework.routers import DefaultRouter
 
+app_name = "crawler"
 
-router = DefaultRouter()
-
-# Admin routes
-router.register("", DatasetViewSet)
-
-urlpatterns = [path("", include(router.urls))]
+urlpatterns = [
+    path("loans", LoansView.as_view()),
+    path("countries", LoansCountriesView.as_view()),
+    path("sectors", LoansSectorsView.as_view())
+]

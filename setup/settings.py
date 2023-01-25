@@ -31,9 +31,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # local apps
+    "crawler",
     # third-party apps
     "rest_framework",
-    "corsheaders",
     "corsheaders",
     "drf_yasg",
 ]
