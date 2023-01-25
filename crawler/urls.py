@@ -6,5 +6,6 @@ app_name = "crawler"
 urlpatterns = [
     path("loans", LoansView.as_view()),
     path("countries", LoansCountriesView.as_view()),
-    path("sectors", LoansSectorsView.as_view())
+    path("sectors", LoansSectorsView.as_view()),
+    path("excel", GenerateExcelView.as_view())
 ]

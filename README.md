@@ -19,13 +19,15 @@ Application for crawling a specific website with excel script generation functio
 
 ### Setup
 ## Installation 
-
+* To crawl and load data to DB
+  ```
+  python manage.py crawl_load_data.py
+  ```
 
 * To run application with docker
-
   ```
-  docker-compose up
- ```
+  docker-compose up -build
+  ```
   
 * Copy the IP address provided once your server has completed building the site. (It will say something like >> Serving at http://0.0.0.0:8000).
 * Open the address in the browser

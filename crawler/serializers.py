@@ -6,9 +6,13 @@ class LoanSerializer(serializers.ModelSerializer):
         model = Loan
         fields = "__all__"
 
-class LoanCountrySerializer(serializers.Serializer):
-    country = serializers.CharField()
+class LoanCountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Loan
+        fields = ["country"]
 
 
-class LoanSectorSerializer(serializers.Serializer):
-    sectors = serializers.CharField()
+class LoanSectorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Loan
+        fields = ["sector"]
