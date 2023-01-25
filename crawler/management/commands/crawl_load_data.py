@@ -15,7 +15,7 @@ class Command(BaseCommand):
             data = crawl_site()
 
             loan_data_model_list = []
-            for index, row in enumerate(data[1:100]):
+            for index, row in enumerate(data[1:101]):
                 cleaned_row = row.text.split("\n")
                 loan_data_model_list.append(
                     Loan(

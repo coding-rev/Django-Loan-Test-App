@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from .serializers import *
 from .models import Loan
 from .excel_generator import generate_excel
+from django.http import JsonResponse
 
 
 class LoansView(generics.GenericAPIView):
@@ -23,24 +24,20 @@ class LoansCountriesView(generics.GenericAPIView):
     """Provide Retrieve functionality"""
 
     permission_classes = [AllowAny]
-    serializer_class = LoanCountrySerializer
 
     def get(self, request):
-        loans = Loan.objects.iterator(chunk_size=50)
-        country_data = self.serializer_class(loans, many=True)
-        return Response(country_data.data)
+        country = Loan.objects.all().values_list("country", flat=True)
+        return JsonResponse({"countries": list(country)})
 
 
 class LoansSectorsView(generics.GenericAPIView):
     """Provide Retrieve functionality"""
 
     permission_classes = [AllowAny]
-    serializer_class = LoanSectorSerializer
 
     def get(self, request):
-        loans = Loan.objects.iterator(chunk_size=50)
-        sector_data = self.serializer_class(loans, many=True)
-        return Response(sector_data.data)
+        sectors = Loan.objects.all().values_list("sector", flat=True)
+        return JsonResponse({"sectors": list(sectors)})
 
 
 class GenerateExcelView(generics.GenericAPIView):
