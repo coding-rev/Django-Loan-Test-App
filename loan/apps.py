@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class CrawlerConfig(AppConfig):
+class LoanConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "crawler"
+    name = "loan"

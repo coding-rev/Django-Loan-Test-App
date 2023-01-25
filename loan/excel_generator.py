@@ -64,9 +64,6 @@ def generate_excel():
     chart_sheet.data_validation('A2', {'validate': 'list',
                                     'source': ['Year', 'Sector', 'Country']})
 
-    # make cells fit contents
-    chart_sheet.autofit()
-    data_sheet.autofit()
     
     # Save the Excel file
     workbook.close()

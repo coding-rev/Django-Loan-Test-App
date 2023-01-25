@@ -2,8 +2,8 @@
 from django.core.management import BaseCommand
 
 # Local imports
-from crawler.site_crawler import crawl_site
-from crawler.models import Loan
+from loan.site_crawler import crawl_site
+from loan.models import Loan
 
 class Command(BaseCommand):
     help = "Crawl site and populate DB with data (loans data)"
