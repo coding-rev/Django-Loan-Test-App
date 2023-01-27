@@ -2,8 +2,10 @@
 from django.core.management import BaseCommand
 
 # Local imports
-from loan.site_crawler import crawl_site
-from loan.models import Loan
+from loan.utils.site_crawler import crawl_site
+from loan.models.loan_model import Loan
+from loan.models.country_model import Country
+from loan.models.sector_model import Sector
 
 
 class Command(BaseCommand):

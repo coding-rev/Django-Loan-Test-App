@@ -1,11 +1,15 @@
+# Python/django imports
 from rest_framework import viewsets, mixins, generics
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.http import HttpResponse
+
+# Local app imports
 from .serializers import *
-from .models import Loan
-from .excel_generator import generate_excel
-from django.http import JsonResponse
+from .models.loan_model import Loan
+from .models.country_model import Country
+from .models.sector_model import Sector
+from .utils.excel_generator import generate_excel
 
 
 class LoansView(generics.GenericAPIView):
@@ -15,29 +19,33 @@ class LoansView(generics.GenericAPIView):
     serializer_class = LoanSerializer
 
     def get(self, request):
-        loans = Loan.objects.iterator(chunk_size=50)
+        loans = Loan.objects.select_related("country", "sector").iterator(chunk_size=50)
         data = self.serializer_class(loans, many=True)
         return Response(data.data)
 
 
-class LoansCountriesView(generics.GenericAPIView):
+class CountryView(generics.GenericAPIView):
     """Provide Retrieve functionality"""
 
     permission_classes = [AllowAny]
+    serializer_class = CountrySerializer
 
     def get(self, request):
-        country = Loan.objects.all().values_list("country", flat=True)
-        return JsonResponse({"countries": list(country)})
+        countries = Country.objects.iterator(chunk_size=50)
+        serialized_data = self.serializer_class(countries, many=True)
+        return Response(serialized_data.data)
 
 
-class LoansSectorsView(generics.GenericAPIView):
+class SectorView(generics.GenericAPIView):
     """Provide Retrieve functionality"""
 
     permission_classes = [AllowAny]
+    serializer_class = SectorSerializer
 
     def get(self, request):
-        sectors = Loan.objects.all().values_list("sector", flat=True)
-        return JsonResponse({"sectors": list(sectors)})
+        sectors = Sector.objects.iterator(chunk_size=50)
+        serialized_data = self.serializer_class(sectors, many=True)
+        return Response(serialized_data.data)
 
 
 class GenerateExcelView(generics.GenericAPIView):

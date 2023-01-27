@@ -28,6 +28,9 @@ class SectorSerializer(serializers.ModelSerializer):
 
 
 class LoanSerializer(serializers.ModelSerializer):
+    sector = SectorSerializer()
+    country = CountrySerializer()
+
     class Meta:
         model = Loan
         fields = "__all__"
