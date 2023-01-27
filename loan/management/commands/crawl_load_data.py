@@ -1,7 +1,7 @@
 # Python/django imports
 from django.core.management import BaseCommand
 from datetime import datetime
-
+from django.db import transaction
 # Local imports
 from loan.utils.site_crawler import crawl_site
 from loan.models.loan_model import Loan
@@ -11,7 +11,8 @@ from loan.models.sector_model import Sector
 
 class Command(BaseCommand):
     help = "Crawl site and populate DB with data (loans data)"
-
+    
+    @transaction.atomic
     def handle(self, *args, **options):
         self.stdout.write("crawling....")
         try:
@@ -25,9 +26,9 @@ class Command(BaseCommand):
                 cleaned_row = row.text.split("\n")
 
                 # Get or create country
-                row_country = Country.objects.get_or_create(name=cleaned_row[2])
+                row_country, status = Country.objects.get_or_create(name=cleaned_row[2])
                 # Get or create sector
-                row_sector = Sector.objects.get_or_create(name=cleaned_row[3])
+                row_sector, status = Sector.objects.get_or_create(name=cleaned_row[3])
                 # Sanitize row date to python date format
                 row_signature_date = datetime.strptime(cleaned_row[0], "%d %B %Y")
 
