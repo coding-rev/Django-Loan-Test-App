@@ -1,11 +1,14 @@
 # Python/django imports
 from django.test import SimpleTestCase
 from django.urls import reverse, resolve
+
 # Local apps imports
 from loan import views
 
-''' App urls/routes test class'''
-class TestLoanUrls(SimpleTestCase):
+""" App urls/routes test class"""
+
+
+class TestUrls(SimpleTestCase):
     def test_loan_route(self):
         url = reverse("loan:loan_path")
         url_view_function = resolve(url).func.view_class
@@ -20,6 +23,3 @@ class TestLoanUrls(SimpleTestCase):
         url = reverse("loan:sector_path")
         url_view_function = resolve(url).func.view_class
         self.assertEqual(url_view_function, views.SectorView)
-
-  
-    

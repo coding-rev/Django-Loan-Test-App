@@ -11,7 +11,7 @@ from .models.sector_model import Sector
 
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Loan
+        model = Country
         fields = "__all__"
 
 
@@ -20,7 +20,7 @@ class CountrySerializer(serializers.ModelSerializer):
 
 class SectorSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Loan
+        model = Sector
         fields = "__all__"
 
 

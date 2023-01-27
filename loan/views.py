@@ -54,13 +54,13 @@ class GenerateExcelView(generics.GenericAPIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        output = generate_excel()
+        output_file = generate_excel()
         # Set up the Http response.
         filename = "loan_excel.xlsx"
         response = HttpResponse(
-            output,
-            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            output_file,
+            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
-        response["Content-Disposition"] = "attachment; filename=%s" % filename
+        response["Content-Disposition"] = f"attachment; filename={filename}"
 
         return response
