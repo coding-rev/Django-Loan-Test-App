@@ -5,7 +5,7 @@ from loan.models.loan_model import Loan
 from loan.models.country_model import Country
 from loan.models.sector_model import Sector
 
-''' Loan test class'''
+''' App models test class'''
 class TestLoanModels(TestCase):
     def test_loan_model_fields(self):
         # Create required model instances for test

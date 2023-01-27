@@ -12,7 +12,7 @@ from .models.sector_model import Sector
 from .utils.excel_generator import generate_excel
 
 
-class LoansView(generics.GenericAPIView):
+class LoanView(generics.GenericAPIView):
     """Provide Retrieve functionality"""
 
     permission_classes = [AllowAny]
