@@ -41,3 +41,7 @@ class TestViews(TestCase):
         self.assertEqual(response.status_code, 200)
 
    
+    def test_generate_excel(self):
+        url = reverse("loan:generate_excel_path")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)

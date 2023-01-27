@@ -7,7 +7,14 @@ from bs4 import BeautifulSoup
 
 def crawl_site():
     # Use Selenium to navigate to the website
-    driver = webdriver.Chrome()
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage') 
+    chrome_options.add_argument('--window-size=1920,1080')
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--disable-gpu')
+    driver = webdriver.Chrome(chrome_options=chrome_options)
+   
     driver.get("https://www.eib.org/en/projects/loans/index.htm")
     driver.implicitly_wait(10)
 

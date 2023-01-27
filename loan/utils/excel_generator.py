@@ -21,7 +21,7 @@ def generate_excel():
     # Get data from db
     data = list(
         Loan.objects.all().values_list(
-            "signature_date", "title", "country", "sector", "signed_amount"
+            "signature_date", "title", "country__name", "sector__name", "signed_amount"
         )
     )
     headers = ["signature_date", "title", "country", "sector", "signed_amount"]
@@ -33,7 +33,7 @@ def generate_excel():
     # Write the data to the sheet
     for row, loan in enumerate(data, start=1):
         for col, header in enumerate(headers):
-            data_sheet.write(row, col, loan[col])
+            data_sheet.write(row, col, str(loan[col]))
 
     # Apply styling to the headers
     header_format = workbook.add_format({"bold": True, "align": "center"})
@@ -51,8 +51,8 @@ def generate_excel():
     chart.add_series(
         {
             "name": "=Data sheet!$B$1",
-            "categories": "=Data sheet!$A$2:$A$100",
-            "values": "=Data sheet!$D$2:$D$100",
+            "categories": "=Data sheet!$A$2:$A$101",
+            "values": "=Data sheet!$D$2:$D$101",
         }
     )
 
