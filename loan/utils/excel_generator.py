@@ -1,6 +1,6 @@
 import io
 import xlsxwriter
-from .models import Loan
+from loan.models.loan_model import Loan
 
 
 def generate_excel():
