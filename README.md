@@ -26,7 +26,7 @@ Application for crawling a specific website with excel script generation functio
 
 * To run application with docker
   ```
-  docker-compose up -build
+  docker-compose up --build
   ```
   
 * Copy the IP address provided once your server has completed building the site. (It will say something like >> Serving at http://0.0.0.0:8000).

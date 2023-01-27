@@ -4,6 +4,7 @@ from selenium.webdriver.support.ui import Select
 import time
 from bs4 import BeautifulSoup
 
+
 def crawl_site():
     # Use Selenium to navigate to the website
     driver = webdriver.Chrome()
@@ -11,7 +12,7 @@ def crawl_site():
     driver.implicitly_wait(10)
 
     # Use BeautifulSoup4 to parse the HTML and extract the data from the data
-    soup = BeautifulSoup(driver.page_source, 'html.parser')
+    soup = BeautifulSoup(driver.page_source, "html.parser")
 
     # Locate and change pagination from default to 100
     select = Select(driver.find_element(By.XPATH, '//select[@id="show-entries"]'))
