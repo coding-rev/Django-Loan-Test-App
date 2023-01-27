@@ -17,4 +17,3 @@ ADD . /setup/
 
 # Install any needed packages specified in requirements.txt
 RUN pip install -r requirements.txt
-RUN python manage.py crawl_load_data
