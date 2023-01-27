@@ -5,8 +5,7 @@ Simple django application with website crawling and excel generation as main fea
 * [General info](#general-info)
 * [Technologies](#technologies)
 * [Setup](#setup)
-* [Migrations](#migrations)
-* [Running Crawler To Populate Data](#running-crawler-to-populate-data)
+* [Commands](#commands)
 * [App endpoints](#app-endpoints)
 * [API Documentation](#api-documentation)
 
@@ -37,18 +36,21 @@ docker-compose up --build
 * Copy the IP address provided once your server has completed building the site. (It will say something like >> Serving at http://0.0.0.0:8000).
 * Open the address in the browser
 
-## Migrations
+## Commands
+Open docker bash with 
 ```
 docker ps
 docker exec -it <CONTAINER_NAME> bash
+```
+In our case, default container name is "setup"
+* To run migrations
+```
 python manage.py makemigrations
 python manage.py migrate
 
 ```
-## Running Crawler To Populate Data
+* To run crawler and populate data to db
 ```
-docker ps
-docker exec -it <CONTAINER_NAME> bash
 python manage.py crawl_load_data
 ```
 
