@@ -9,12 +9,15 @@ def generate_excel():
     # Create a new Excel file
     # workbook = xlsxwriter.Workbook('loans_app_excel.xlsx')
     workbook = xlsxwriter.Workbook(output)
-
+    
     # Add a "Data sheet"
     data_sheet = workbook.add_worksheet("Data sheet")
 
     # Add a "Chart sheet"
     chart_sheet = workbook.add_worksheet("Chart sheet")
+
+    # Add a "Aggregated hidden sheet"
+    agg_sheet = workbook.add_worksheet(name="aggregation")
 
     # Add data to the "Data sheet"
 
@@ -46,61 +49,54 @@ def generate_excel():
         data_sheet.set_column(col, col, 20)
         data_sheet.write(0, col, headers[col], header_format)
 
-    # Chart Sheet Creation
-    # Fetch loan data for aggregation
-    loans = (
-        Loan.objects.all()
-        .select_related("country", "sector")
-        
-    )
+    # Creating CHART SHEET DATA
+    loan_dataset = Loan.objects.select_related("country", "sector", "currency").all()
 
-    agg_by_year = loans.values("signature_date__year").annotate(
+    loan_by_year = loan_dataset.values("signature_date__year").annotate(
         total_amount=Sum("signed_amount"),
         count=Count("id"),
     )
 
-    agg_by_country = loans.values("country__name").annotate(
+    loan_by_country = loan_dataset.values("country__name").annotate(
         total_amount=Sum("signed_amount"),
         count=Count("id"),
     )
 
-    agg_by_sector = loans.values("sector__name").annotate(
+    loan_by_sector = loan_dataset.values("sector__name").annotate(
         total_amount=Sum("signed_amount"),
         count=Count("id"),
     )
-    # Dropdown list
+    # Add drop down
     chart_sheet.data_validation(
-        "A2",
+        "C2",
         {
             "validate": "list",
-            "source": ["Agg By Country", "Agg By Year", "Agg By Sector"],
+            "source": ["By Country", "By Year", "By Sector"],
         },
     )
     # Setting default value to the cell
-    chart_sheet.write("A2", "Agg By Country")
+    chart_sheet.write("C2", "By Country")
 
-    # Adding chart objects
     chart = workbook.add_chart({"type": "column"})
-    chart_2 = workbook.add_chart({"type": "column"})
+    chart2 = workbook.add_chart({"type": "column"})
 
-    # Preparing data for hidden sheet table to be used for the chart series
+    # Creating aggregated sheet
     agg_by_year = [
         [data["signature_date__year"], data["total_amount"], data["count"]]
-        for data in agg_by_year
+        for data in loan_by_year
     ]
     agg_by_country = [
         [data["country__name"], data["total_amount"], data["count"]]
-        for data in agg_by_country
+        for data in loan_by_country
     ]
 
     agg_by_sector = [
         [data["sector__name"], data["total_amount"], data["count"]]
-        for data in agg_by_sector
+        for data in loan_by_sector
     ]
-    # Add aggregation sheet
-    agg_sheet = workbook.add_worksheet(name="aggregation")
+
     agg_sheet.add_table(
-        f"A1:D{len(agg_by_year)+1}",
+        f"B1:D{1+len(agg_by_year)}",
         {
             "data": agg_by_year,
             "name": "DataAggregationbyyear",
@@ -115,7 +111,7 @@ def generate_excel():
     )
 
     agg_sheet.add_table(
-        f"G1:I{len(agg_by_country)+1}",
+        f"F1:H{1+len(agg_by_country)}",
         {
             "data": agg_by_country,
             "name": "DataAggregationbycountry",
@@ -129,7 +125,7 @@ def generate_excel():
     )
 
     agg_sheet.add_table(
-        f"K1:M{len(agg_by_sector)+1}",
+        f"J1:L{1+len(agg_by_sector)}",
         {
             "data": agg_by_sector,
             "name": "DataAggregationbySector",
@@ -143,70 +139,68 @@ def generate_excel():
         },
     )
 
-    # Creating/generating dynamic data for chart
+    # Creating dynamic data (excel formula) to be used for the chart series as defined names
     chart_y_series = f'=IF(Chartsheet!$B$2="By Country",\
-        aggregation!$G$2:$G${len(agg_by_country)+1},\
+        aggregation!$G$2:$G${1+len(loan_by_country)},\
             IF(Chartsheet!$B$2="By Year",\
-                aggregation!$C$2:$C${len(agg_by_year)+1},\
-                aggregation!$K$2:$K${1+len(agg_by_sector)}\
+                aggregation!$C$2:$C${1+len(loan_by_year)},\
+                aggregation!$K$2:$K${1+len(loan_by_sector)}\
             )\
         )'
     chart_x_label = f'=IF(Chartsheet!$B$2="By Country",\
-        aggregation!$F$2:$F${len(agg_by_country)+1},\
+        aggregation!$F$2:$F${1+len(loan_by_country)},\
             IF(Chartsheet!$B$2="By Year",\
-                aggregation!$B$2:$B${len(agg_by_year)+1},\
-                aggregation!$J$2:$J${len(agg_by_sector)+1}\
+                aggregation!$B$2:$B${1+len(loan_by_year)},\
+                aggregation!$J$2:$J${1+len(loan_by_sector)}\
             )\
         )'
 
-    chart_2_y_series = f'=IF(Chartsheet!$B$2="By Country",\
-        aggregation!$H$2:$H${len(agg_by_country)+1},\
+    chart2_y_series = f'=IF(Chartsheet!$B$2="By Country",\
+        aggregation!$H$2:$H${1+len(loan_by_country)},\
             IF(Chartsheet!$B$2="By Year",\
-                aggregation!$D$2:$D${len(agg_by_year)+1},\
-                aggregation!$L$2:$L${len(agg_by_sector)+1}\
+                aggregation!$D$2:$D${1+len(loan_by_year)},\
+                aggregation!$L$2:$L${1+len(loan_by_sector)}\
             )\
         )'
 
-    
+    # defining names that can be used to represent excel functions and formulas: returns range of cells
     workbook.define_name("chart_series", chart_y_series)
     workbook.define_name("chart_labels", chart_x_label)
-    workbook.define_name("chart_2_series", chart_2_y_series)
-    workbook.define_name("chart_2_labels", chart_x_label)
+    workbook.define_name("chart2_series", chart2_y_series)
+    workbook.define_name("chart2_labels", chart_x_label)
 
-    # Adding chart series
+    # Adding chart series (y-axis values as 'values' and x-axis values as 'categories')
     chart.add_series(
         {
             "values": "=aggregation!chart_series",
-            "categories": "=aggregation!chart_labels",
+            "categories": "=aggregation!chart_labels"
         }
     )
-    # Adding chart 2 series
-    chart_2.add_series(
+
+    chart2.add_series(
         {
-            "values": "=aggregation!chart_2_series",
-            "categories": "=aggregation!chart_2_labels",
+            "values": "=aggregation!chart2_series",
+            "categories": "=aggregation!chart2_labels"
         }
     )
 
-    # Adding style and other settings
-    chart.set_size({"width": 600})
+    # setting addition info
     chart.set_style(25)
+    chart.set_size({"width": 600})
     chart.set_title({"name": "Loan Amount"})
-    
-    chart_2.set_size({"width": 600})
-    chart_2.set_style(25)
-    chart_2.set_title({"name": "Loan Quantity"})
-    
+    chart.set_style(25)
+    chart2.set_size({"width": 600})
+    chart2.set_title({"name": "Loan Quantity"})
 
-    # Insert charts
-    chart_sheet.insert_chart("A4", chart)
-    chart_sheet.insert_chart("A20", chart_2)
+    # Inserting the charts into the chart sheet
+    chart_sheet.insert_chart("B4", chart)
+    chart_sheet.insert_chart("B20", chart2)
 
-    # making sheets fit 
+    # auto fitting the cells to the width of the contents
     chart_sheet.autofit()
     data_sheet.autofit()
 
-    # Hidding the agg_sheet on default
+    # Hide the sheet
     agg_sheet.hide()
 
     # Save the Excel file
