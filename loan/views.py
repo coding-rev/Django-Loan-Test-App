@@ -1,5 +1,6 @@
 # Python/django imports
 from rest_framework import viewsets, mixins, generics
+from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.http import HttpResponse
@@ -48,18 +49,20 @@ class SectorView(generics.GenericAPIView):
         return Response(serialized_data.data)
 
 
-class GenerateExcelView(generics.GenericAPIView):
+class GenerateExcelView(APIView):
     """Provide Retrieve functionality"""
 
     permission_classes = [AllowAny]
 
     def get(self, request):
+        # generating excel record
         output_file = generate_excel()
+
         # Set up the Http response.
         filename = "loan_excel.xlsx"
         response = HttpResponse(
             output_file,
-            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         )
         response["Content-Disposition"] = f"attachment; filename={filename}"
 

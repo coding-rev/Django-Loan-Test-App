@@ -5,8 +5,7 @@ from rest_framework import serializers
 from .models.country_model import Country
 from .models.loan_model import Loan
 from .models.sector_model import Sector
-
-""" Defined serializer for country model """
+from .models.currency_model import Currency
 
 
 class CountrySerializer(serializers.ModelSerializer):
@@ -15,21 +14,22 @@ class CountrySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-""" Defined serializer for sector model """
-
-
 class SectorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sector
         fields = "__all__"
 
 
-""" Defined serializer for loan model """
+class CurrencySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Currency
+        fields = "__all__"
 
 
 class LoanSerializer(serializers.ModelSerializer):
     sector = SectorSerializer()
     country = CountrySerializer()
+    currency = CurrencySerializer()
 
     class Meta:
         model = Loan

@@ -9,8 +9,9 @@ from loan.models.sector_model import Sector
 
 
 """ App urls/routes test class"""
-class TestViews(TestCase):
 
+
+class TestViews(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -23,7 +24,7 @@ class TestViews(TestCase):
             sector=cls.sector,
             signed_amount="€135,000,000",
         )
-    
+
     def test_country_view(self):
         url = reverse("loan:country_path")
         response = self.client.get(url)
@@ -34,13 +35,11 @@ class TestViews(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    
     def test_loan_view(self):
         url = reverse("loan:loan_path")
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-   
     def test_generate_excel(self):
         url = reverse("loan:generate_excel_path")
         response = self.client.get(url)

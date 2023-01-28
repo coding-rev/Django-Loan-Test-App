@@ -6,6 +6,7 @@ from django.db import models
 from setup.basemodel import TimeBaseModel
 from .country_model import Country
 from .sector_model import Sector
+from .currency_model import Currency
 
 
 class Loan(TimeBaseModel):
@@ -18,7 +19,10 @@ class Loan(TimeBaseModel):
     sector = models.ForeignKey(
         Sector, on_delete=models.PROTECT, related_name="loan_sector"
     )
-    signed_amount = models.CharField(max_length=100)
+    currency = models.ForeignKey(
+        Currency, on_delete=models.PROTECT, related_name="loan_currency"
+    )
+    signed_amount = models.IntegerField()
 
     def __str__(self):
         return self.title
