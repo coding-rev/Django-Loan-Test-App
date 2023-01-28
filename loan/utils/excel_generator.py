@@ -100,7 +100,7 @@ def generate_excel():
     # Add aggregation sheet
     agg_sheet = workbook.add_worksheet(name="aggregation")
     agg_sheet.add_table(
-        f"A1:D{1+len(agg_by_year)}",
+        f"A1:D{len(agg_by_year)+1}",
         {
             "data": agg_by_year,
             "name": "DataAggregationbyyear",
@@ -115,7 +115,7 @@ def generate_excel():
     )
 
     agg_sheet.add_table(
-        f"G1:I{1+len(agg_by_country)}",
+        f"G1:I{len(agg_by_country)+1}",
         {
             "data": agg_by_country,
             "name": "DataAggregationbycountry",
@@ -129,7 +129,7 @@ def generate_excel():
     )
 
     agg_sheet.add_table(
-        f"K1:M{1+len(agg_by_sector)}",
+        f"K1:M{len(agg_by_sector)+1}",
         {
             "data": agg_by_sector,
             "name": "DataAggregationbySector",
@@ -143,44 +143,44 @@ def generate_excel():
         },
     )
 
-    # Creating dynamic data (excel formula) to be used for the chart series as defined names
+    # Creating/generating dynamic data for chart
     chart_y_series = f'=IF(Chartsheet!$B$2="By Country",\
-        aggregation!$G$2:$G${1+len(agg_by_country)},\
+        aggregation!$G$2:$G${len(agg_by_country)+1},\
             IF(Chartsheet!$B$2="By Year",\
-                aggregation!$C$2:$C${1+len(agg_by_year)},\
+                aggregation!$C$2:$C${len(agg_by_year)+1},\
                 aggregation!$K$2:$K${1+len(agg_by_sector)}\
             )\
         )'
     chart_x_label = f'=IF(Chartsheet!$B$2="By Country",\
-        aggregation!$F$2:$F${1+len(agg_by_country)},\
+        aggregation!$F$2:$F${len(agg_by_country)+1},\
             IF(Chartsheet!$B$2="By Year",\
-                aggregation!$B$2:$B${1+len(agg_by_year)},\
-                aggregation!$J$2:$J${1+len(agg_by_sector)}\
+                aggregation!$B$2:$B${len(agg_by_year)+1},\
+                aggregation!$J$2:$J${len(agg_by_sector)+1}\
             )\
         )'
 
     chart_2_y_series = f'=IF(Chartsheet!$B$2="By Country",\
-        aggregation!$H$2:$H${1+len(agg_by_country)},\
+        aggregation!$H$2:$H${len(agg_by_country)+1},\
             IF(Chartsheet!$B$2="By Year",\
-                aggregation!$D$2:$D${1+len(agg_by_year)},\
-                aggregation!$L$2:$L${1+len(agg_by_sector)}\
+                aggregation!$D$2:$D${len(agg_by_year)+1},\
+                aggregation!$L$2:$L${len(agg_by_sector)+1}\
             )\
         )'
 
-    # defining names that can be used to represent excel functions and formulas: returns range of cells
+    
     workbook.define_name("chart_series", chart_y_series)
     workbook.define_name("chart_labels", chart_x_label)
     workbook.define_name("chart_2_series", chart_2_y_series)
     workbook.define_name("chart_2_labels", chart_x_label)
 
-    # Adding chart series (y-axis values as 'values' and x-axis values as 'categories')
+    # Adding chart series
     chart.add_series(
         {
             "values": "=aggregation!chart_series",
             "categories": "=aggregation!chart_labels",
         }
     )
-
+    # Adding chart 2 series
     chart_2.add_series(
         {
             "values": "=aggregation!chart_2_series",
@@ -188,7 +188,7 @@ def generate_excel():
         }
     )
 
-    # setting addition info
+    # Adding style and other settings
     chart.set_size({"width": 600})
     chart.set_style(25)
     chart.set_title({"name": "Loan Amount"})
@@ -198,15 +198,15 @@ def generate_excel():
     chart_2.set_title({"name": "Loan Quantity"})
     
 
-    # Inserting the charts into the chart sheet
+    # Insert charts
     chart_sheet.insert_chart("A4", chart)
     chart_sheet.insert_chart("A20", chart_2)
 
-    # auto fitting the cells to the width of the contents
+    # making sheets fit 
     chart_sheet.autofit()
     data_sheet.autofit()
 
-    # Hide the sheet
+    # Hidding the agg_sheet on default
     agg_sheet.hide()
 
     # Save the Excel file
