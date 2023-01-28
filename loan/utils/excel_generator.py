@@ -73,11 +73,11 @@ def generate_excel():
         "A2",
         {
             "validate": "list",
-            "source": ["By Country", "By Year", "By Sector"],
+            "source": ["Agg By Country", "Agg By Year", "Agg By Sector"],
         },
     )
     # Setting default value to the cell
-    chart_sheet.write("A2", "By Country")
+    chart_sheet.write("A2", "Agg By Country")
 
     # Adding chart objects
     chart = workbook.add_chart({"type": "column"})
@@ -98,8 +98,8 @@ def generate_excel():
         for data in agg_by_sector
     ]
     # Add aggregation sheet
-    hidden_sheet = workbook.add_worksheet(name="aggregation")
-    hidden_sheet.add_table(
+    agg_sheet = workbook.add_worksheet(name="aggregation")
+    agg_sheet.add_table(
         f"A1:D{1+len(agg_by_year)}",
         {
             "data": agg_by_year,
@@ -114,7 +114,7 @@ def generate_excel():
         },
     )
 
-    hidden_sheet.add_table(
+    agg_sheet.add_table(
         f"G1:I{1+len(agg_by_country)}",
         {
             "data": agg_by_country,
@@ -128,7 +128,7 @@ def generate_excel():
         },
     )
 
-    hidden_sheet.add_table(
+    agg_sheet.add_table(
         f"K1:M{1+len(agg_by_sector)}",
         {
             "data": agg_by_sector,
@@ -207,7 +207,7 @@ def generate_excel():
     data_sheet.autofit()
 
     # Hide the sheet
-    hidden_sheet.hide()
+    agg_sheet.hide()
 
     # Save the Excel file
     workbook.close()
