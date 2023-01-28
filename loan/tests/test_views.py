@@ -6,6 +6,7 @@ from django.urls import reverse
 from loan.models.loan_model import Loan
 from loan.models.country_model import Country
 from loan.models.sector_model import Sector
+from loan.models.currency_model import Currency
 
 
 """ App urls/routes test class"""
@@ -17,12 +18,14 @@ class TestViews(TestCase):
         super().setUpClass()
         cls.country = Country.objects.create(name="Germany")
         cls.sector = Sector.objects.create(name="Credit lines")
+        cls.currency = Currency.objects.create(symbol="$")
         cls.loan = Loan.objects.create(
             signature_date="2023-01-26",
             title="Test Loan Title",
             country=cls.country,
             sector=cls.sector,
-            signed_amount="€135,000,000",
+            currency=cls.currency,
+            signed_amount=135000000,
         )
 
     def test_country_view(self):
