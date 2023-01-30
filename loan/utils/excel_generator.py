@@ -11,13 +11,13 @@ def generate_excel():
     workbook = xlsxwriter.Workbook(output)
     
     # Add a "Data sheet"
-    data_sheet = workbook.add_worksheet("Data sheet")
+    data_sheet = workbook.add_worksheet("Datasheet")
 
     # Add a "Chart sheet"
-    chart_sheet = workbook.add_worksheet("Chart sheet")
+    chart_sheet = workbook.add_worksheet("Chartsheet")
 
     # Add a "Aggregated hidden sheet"
-    agg_sheet = workbook.add_worksheet(name="aggregation")
+    agg_sheet = workbook.add_worksheet("aggregation")
 
     # Add data to the "Data sheet"
 
@@ -68,14 +68,14 @@ def generate_excel():
     )
     # Add drop down
     chart_sheet.data_validation(
-        "C2",
+        "B2",
         {
             "validate": "list",
             "source": ["By Country", "By Year", "By Sector"],
         },
     )
     # Setting default value to the cell
-    chart_sheet.write("C2", "By Country")
+    chart_sheet.write("B2", "By Country")
 
     chart = workbook.add_chart({"type": "column"})
     chart2 = workbook.add_chart({"type": "column"})
@@ -99,7 +99,7 @@ def generate_excel():
         f"B1:D{1+len(agg_by_year)}",
         {
             "data": agg_by_year,
-            "name": "DataAggregationbyyear",
+            "name": "DataAggregationbyYear",
             "total_row": False,
             "autofilter": False,
             "columns": [
@@ -114,7 +114,7 @@ def generate_excel():
         f"F1:H{1+len(agg_by_country)}",
         {
             "data": agg_by_country,
-            "name": "DataAggregationbycountry",
+            "name": "DataAggregationbyCountry",
             "autofilter": False,
             "columns": [
                 {"header": "Country"},
@@ -163,13 +163,13 @@ def generate_excel():
             )\
         )'
 
-    # defining names that can be used to represent excel functions and formulas: returns range of cells
+
     workbook.define_name("chart_series", chart_y_series)
     workbook.define_name("chart_labels", chart_x_label)
     workbook.define_name("chart2_series", chart2_y_series)
     workbook.define_name("chart2_labels", chart_x_label)
 
-    # Adding chart series (y-axis values as 'values' and x-axis values as 'categories')
+    # Adding chart series
     chart.add_series(
         {
             "values": "=aggregation!chart_series",
@@ -184,13 +184,15 @@ def generate_excel():
         }
     )
 
-    # setting addition info
-    chart.set_style(25)
-    chart.set_size({"width": 600})
+    
+    chart.set_style(30)
+    chart.set_size({"width": 800})
     chart.set_title({"name": "Loan Amount"})
-    chart.set_style(25)
-    chart2.set_size({"width": 600})
+    chart.set_legend({"none": True})
+    chart2.set_style(30)
+    chart2.set_size({"width": 800})
     chart2.set_title({"name": "Loan Quantity"})
+    chart2.set_legend({"none": True})
 
     # Inserting the charts into the chart sheet
     chart_sheet.insert_chart("B4", chart)
